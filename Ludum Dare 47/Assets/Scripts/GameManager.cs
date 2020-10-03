@@ -5,69 +5,99 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public const int MaxAnimalsPerSeason = 10;
+
+    private static GameManager instance;
+
     [SerializeField] Player Player = null;
 
-    [SerializeField] SeasonBlock Spring = null;
+    [SerializeField] SeasonBlock[] SeasonBlocks = null;
 
-    [SerializeField] SeasonBlock Summer = null;
+    [SerializeField] Animal animalPrefab = null;
+    public static Animal AnimalPrefab => instance.animalPrefab;
 
-    [SerializeField] SeasonBlock Autumn = null;
+    public static Vector2 ScreenMaxCoord;
+    public static float ScreenWidth;
+    public static float ScreenHeight;
+    public const float PaddingFactor = 0.8f;
 
-    [SerializeField] SeasonBlock Winter = null;
+    public static Season CurrentSeason;
 
     private void Awake()
     {
-        Spring.transform.position = Vector3.zero;
-        Summer.transform.position = Vector3.zero;
-        Autumn.transform.position = Vector3.zero;
-        Winter.transform.position = Vector3.zero;
+        instance = this;
 
-        Spring.gameObject.SetActive(true);
-        Summer.gameObject.SetActive(false);
-        Autumn.gameObject.SetActive(false);
-        Winter.gameObject.SetActive(false);
+        Animals.Load();
+
+        CurrentSeason = (Season)Random.Range(0, 4);
+
+        foreach (var seasonBlock in SeasonBlocks)
+        {
+            seasonBlock.transform.position = Vector3.zero;
+            seasonBlock.gameObject.SetActive(CurrentSeason == seasonBlock.Season);
+        }
+    }
+
+    private void Start()
+    {
+        Animals.SetSeasons();
+
+        ScreenMaxCoord = new Vector2(Camera.main.aspect * Camera.main.orthographicSize, Camera.main.orthographicSize);
+        ScreenWidth = ScreenMaxCoord.x * 2;
+        ScreenHeight = ScreenMaxCoord.y * 2;
     }
 
     private void LateUpdate()
     {
-        if (Player.transform.position.y > 6)
+        // Up = Summer
+        if (Player.transform.position.y > ScreenMaxCoord.y)
         {
-            Player.transform.position += Vector3.down * 12;
+            Player.transform.position += Vector3.down * ScreenHeight;
 
-            Spring.gameObject.SetActive(false);
-            Summer.gameObject.SetActive(true);
-            Autumn.gameObject.SetActive(false);
-            Winter.gameObject.SetActive(false);
+            SetSeason(Season.Summer);
         }
 
-        if (Player.transform.position.y < -6)
+        // Down = Winter
+        if (Player.transform.position.y < -ScreenMaxCoord.y)
         {
-            Player.transform.position += Vector3.up * 12;
+            Player.transform.position += Vector3.up * ScreenHeight;
 
-            Spring.gameObject.SetActive(false);
-            Summer.gameObject.SetActive(false);
-            Autumn.gameObject.SetActive(false);
-            Winter.gameObject.SetActive(true);
+            SetSeason(Season.Winter);
         }
 
-        if (Player.transform.position.x > 11)
+        // Right = Autumn
+        if (Player.transform.position.x > ScreenMaxCoord.x)
         {
-            Player.transform.position += Vector3.left * 22;
+            Player.transform.position += Vector3.left * ScreenWidth;
 
-            Spring.gameObject.SetActive(false);
-            Summer.gameObject.SetActive(false);
-            Autumn.gameObject.SetActive(true);
-            Winter.gameObject.SetActive(false);
+            SetSeason(Season.Autumn);
         }
 
-        if (Player.transform.position.x < -11)
+        // Left = Spring
+        if (Player.transform.position.x < -ScreenMaxCoord.x)
         {
-            Player.transform.position += Vector3.right * 22;
+            Player.transform.position += Vector3.right * ScreenWidth;
 
-            Spring.gameObject.SetActive(true);
-            Summer.gameObject.SetActive(false);
-            Autumn.gameObject.SetActive(false);
-            Winter.gameObject.SetActive(false);
+            SetSeason(Season.Spring);
         }
+    }
+
+    private void SetSeason(Season season)
+    {
+        CurrentSeason = season;
+
+        foreach (var seasonBlock in SeasonBlocks)
+        {
+            seasonBlock.gameObject.SetActive(CurrentSeason == seasonBlock.Season);
+        }
+    }
+
+    public static Vector3 GetClampedPosition(Vector3 position)
+    {
+        var maxCoordX = ScreenMaxCoord.x;
+        var maxCoordY = ScreenMaxCoord.y;
+
+        return new Vector3(Mathf.Clamp(position.x, -maxCoordX * PaddingFactor, maxCoordX * PaddingFactor),
+            Mathf.Clamp(position.y, -maxCoordY * PaddingFactor, maxCoordY * PaddingFactor));
     }
 }

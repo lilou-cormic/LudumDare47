@@ -1,12 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AnimalDef
 {
-    public string Name;
+    public string Name { get; }
 
-    public Sprite Sprite;
+    public Sprite Sprite { get; }
 
-    public Season Season;
+    public Season Season { get; set; }
+
+    public AnimalDef(string name, Sprite sprite)
+    {
+        Name = name;
+        Sprite = sprite;
+    }
 }
