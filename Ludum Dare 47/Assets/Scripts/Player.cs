@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerDisplay))]
-[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D rb;
-
     private PlayerDisplay PlayerDisplay;
 
     [SerializeField] SpriteRenderer SpriteRenderer = null;
@@ -18,15 +15,14 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
         PlayerDisplay = GetComponent<PlayerDisplay>();
     }
 
-    Vector2 movement = Vector2.zero;
+    Vector3 movement = Vector3.zero;
 
     private void Update()
     {
-        movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         Animator.SetFloat("Speed", movement.magnitude);
 
@@ -36,6 +32,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + (movement.normalized * Speed * Time.deltaTime));
+        transform.position += (movement.normalized * Speed * Time.deltaTime);
     }
 }
