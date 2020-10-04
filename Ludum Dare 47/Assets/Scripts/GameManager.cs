@@ -1,13 +1,15 @@
 ﻿using PurpleCable;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public const int MaxAnimalsPerSeason = 10;
 
+    public const int FoliageLayer = 10;
+
     private static GameManager instance;
+
+    [SerializeField] int Timer = 60 * 4;
 
     [SerializeField] Player Player = null;
 
@@ -16,12 +18,28 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animal animalPrefab = null;
     public static Animal AnimalPrefab => instance.animalPrefab;
 
+    [SerializeField] SortingLayer BehindFoliageSortingLayer;
+
     public static Vector2 ScreenMaxCoord;
     public static float ScreenWidth;
     public static float ScreenHeight;
     public const float PaddingFactor = 0.8f;
 
-    public static Season CurrentSeason;
+    private static Season _CurrentSeason;
+    public static Season CurrentSeason
+    {
+        get => _CurrentSeason;
+
+        set
+        {
+            _CurrentSeason = value;
+            CurrentSeasonChanged?.Invoke();
+        }
+    }
+
+    public static event System.Action CurrentSeasonChanged;
+
+    public static float TimeLeft { get; private set; }
 
     private void Awake()
     {
@@ -40,11 +58,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        TimeLeft = Timer;
+        ScoreManager.ResetScore();
         Animals.SetSeasons();
 
         ScreenMaxCoord = new Vector2(Camera.main.aspect * Camera.main.orthographicSize, Camera.main.orthographicSize);
         ScreenWidth = ScreenMaxCoord.x * 2;
         ScreenHeight = ScreenMaxCoord.y * 2;
+    }
+
+    private void Update()
+    {
+        TimeLeft -= Time.deltaTime;
+
+        if (TimeLeft <= 0)
+        {
+            ScoreManager.SetHighScore();
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
+        }
     }
 
     private void LateUpdate()

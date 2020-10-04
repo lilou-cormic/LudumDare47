@@ -15,8 +15,8 @@ TagManager:
   - 
   - Player
   - Animals
-  - 
-  - 
+  - Foliage
+  - FoliageDetection
   - 
   - 
   - 
@@ -40,6 +40,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BehindFoliage
+    uniqueID: 189282153
+    locked: 0
+  - name: Foliage
+    uniqueID: 3146487073
     locked: 0
   - name: Animals
     uniqueID: 260144945

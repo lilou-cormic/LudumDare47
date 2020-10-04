@@ -30,6 +30,11 @@ public class Animal : Item
         SpriteRenderer.sprite = Def.Sprite;
     }
 
+    protected override bool CanPickup(Collider2D collision)
+    {
+        return collision.gameObject.CompareTag("Player");
+    }
+
     protected override void OnPickup(Collider2D collision)
     {
         //HACK Points
