@@ -17,7 +17,7 @@ TagManager:
   - Animals
   - Foliage
   - FoliageDetection
-  - 
+  - Obstacle
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Obstacle
+    uniqueID: 3562999005
     locked: 0
   - name: BehindFoliage
     uniqueID: 189282153

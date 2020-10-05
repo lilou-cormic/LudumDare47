@@ -127,7 +127,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 260144945
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fe3c9ea12b5eb834b95b5b0bfab97a5d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af2997981ad2d14db8f03bb31e92dcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PickupSound: {fileID: 0}
+  PickupSound: {fileID: 8300000, guid: 91401815463c1c74a9e2c61750ee15db, type: 3}
   SpriteRenderer: {fileID: 4099593751705627254}
 --- !u!58 &6912819375842519483
 CircleCollider2D:

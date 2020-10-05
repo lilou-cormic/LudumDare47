@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerDisplay))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISpeed
 {
     private PlayerDisplay PlayerDisplay;
 
@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] Animator Animator;
 
     [SerializeField] float Speed = 5f;
+
+    private float SpeedFactor = 1f;
 
     private void Awake()
     {
@@ -32,6 +34,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += (movement.normalized * Speed * Time.deltaTime);
+        transform.position += (movement.normalized * Speed * SpeedFactor * Time.deltaTime);
+    }
+
+    public void ChangeSpeed(float factor)
+    {
+        SpeedFactor = factor;
     }
 }

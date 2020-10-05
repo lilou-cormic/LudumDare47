@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using PurpleCable;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class SeasonBlock : MonoBehaviour
 {
     [SerializeField] Season season;
     public Season Season => season;
+
+    [SerializeField] Music Music = null;
 
     private List<Animal> _animals = new List<Animal>();
 
@@ -19,5 +22,11 @@ public class SeasonBlock : MonoBehaviour
     public void RemoveAnimal(Animal animal)
     {
         _animals.Remove(animal);
+    }
+
+    public void PlayMusic()
+    {
+        if (Music != null)
+            Music.Play();
     }
 }

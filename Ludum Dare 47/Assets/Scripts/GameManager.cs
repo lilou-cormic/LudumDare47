@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animal animalPrefab = null;
     public static Animal AnimalPrefab => instance.animalPrefab;
 
-    [SerializeField] SortingLayer BehindFoliageSortingLayer;
+    [SerializeField] AudioClip GameOverSound = null;
 
     public static Vector2 ScreenMaxCoord;
     public static float ScreenWidth;
@@ -53,6 +53,9 @@ public class GameManager : MonoBehaviour
         {
             seasonBlock.transform.position = Vector3.zero;
             seasonBlock.gameObject.SetActive(CurrentSeason == seasonBlock.Season);
+
+            if (seasonBlock.Season == CurrentSeason)
+                seasonBlock.PlayMusic();
         }
     }
 
@@ -65,6 +68,8 @@ public class GameManager : MonoBehaviour
         ScreenMaxCoord = new Vector2(Camera.main.aspect * Camera.main.orthographicSize, Camera.main.orthographicSize);
         ScreenWidth = ScreenMaxCoord.x * 2;
         ScreenHeight = ScreenMaxCoord.y * 2;
+
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -73,6 +78,8 @@ public class GameManager : MonoBehaviour
 
         if (TimeLeft <= 0)
         {
+            GameOverSound?.Play();
+
             ScoreManager.SetHighScore();
             UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
         }
@@ -120,6 +127,9 @@ public class GameManager : MonoBehaviour
         foreach (var seasonBlock in SeasonBlocks)
         {
             seasonBlock.gameObject.SetActive(CurrentSeason == seasonBlock.Season);
+
+            if (seasonBlock.Season == CurrentSeason)
+                seasonBlock.PlayMusic();
         }
     }
 

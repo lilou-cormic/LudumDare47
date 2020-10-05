@@ -7,6 +7,9 @@ namespace PurpleCable
 {
     public class MusicTransition : Singleton<MusicTransition>
     {
+        [SerializeField] float _TransitionSpeed = 0.01f;
+        private static float TransitionSpeed = 0.01f;
+
         private static Dictionary<string, AudioSource> Musics = null;
 
         private static AudioSource _currentMusic = null;
@@ -14,6 +17,8 @@ namespace PurpleCable
 
         private void Awake()
         {
+            TransitionSpeed = _TransitionSpeed;
+
             SetVolume();
 
             if (Musics == null)
@@ -46,13 +51,9 @@ namespace PurpleCable
                 _currentMusic.volume = _volume;
         }
 
-        public static void Play(string musicName)
+        public static void Play(AudioSource nextMusic, float volumMultiplier = 1)
         {
             AudioSource currentMusic = _currentMusic;
-            AudioSource nextMusic = null;
-
-            if (!string.IsNullOrWhiteSpace(musicName) && Musics.ContainsKey(musicName))
-                nextMusic = Musics[musicName];
 
             if (currentMusic == nextMusic)
                 return;
@@ -65,7 +66,7 @@ namespace PurpleCable
                 {
                     Instance.StopAllCoroutines();
 
-                    Instance.StartCoroutine(TransitionMusic(currentMusic, nextMusic));
+                    Instance.StartCoroutine(TransitionMusic(currentMusic, nextMusic, volumMultiplier));
                 }
                 else
                 {
@@ -73,14 +74,26 @@ namespace PurpleCable
                         currentMusic.volume = 0;
 
                     if (nextMusic != null)
-                        nextMusic.volume = _volume;
+                        nextMusic.volume = _volume * volumMultiplier;
                 }
             }
         }
 
-        private static IEnumerator TransitionMusic(AudioSource currentMusic, AudioSource nextMusic)
+        public static void Play(string musicName)
+        {
+            AudioSource nextMusic = null;
+
+            if (!string.IsNullOrWhiteSpace(musicName) && Musics.ContainsKey(musicName))
+                nextMusic = Musics[musicName];
+
+            Play(nextMusic);
+        }
+
+        private static IEnumerator TransitionMusic(AudioSource currentMusic, AudioSource nextMusic, float volumMultiplier = 1)
         {
             bool ok = true;
+
+            float volume = _volume * volumMultiplier;
 
             do
             {
@@ -88,20 +101,20 @@ namespace PurpleCable
 
                 if (currentMusic != null && currentMusic.volume > 0)
                 {
-                    currentMusic.volume -= 0.01f;
+                    currentMusic.volume -= TransitionSpeed;
                     ok = false;
 
                     if (currentMusic.volume < 0)
                         currentMusic.volume = 0;
                 }
 
-                if (nextMusic != null && nextMusic.volume < _volume)
+                if (nextMusic != null && nextMusic.volume < volume)
                 {
-                    nextMusic.volume += 0.01f;
+                    nextMusic.volume += TransitionSpeed;
                     ok = false;
 
-                    if (nextMusic.volume > _volume)
-                        nextMusic.volume = _volume;
+                    if (nextMusic.volume > volume)
+                        nextMusic.volume = volume;
                 }
 
                 yield return new WaitForSeconds(0.1f);
@@ -112,7 +125,7 @@ namespace PurpleCable
                 currentMusic.volume = 0;
 
             if (nextMusic != null)
-                nextMusic.volume = _volume;
+                nextMusic.volume = volume;
         }
     }
 }

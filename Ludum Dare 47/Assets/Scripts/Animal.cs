@@ -1,9 +1,11 @@
 ﻿using PurpleCable;
 using UnityEngine;
 
-public class Animal : Item
+public class Animal : Item, ISpeed
 {
     public const float Speed = 1f;
+
+    private float SpeedFactor = 1f;
 
     public AnimalDef Def { get; private set; }
 
@@ -60,6 +62,11 @@ public class Animal : Item
             return;
         }
 
-        transform.position += direction * Time.deltaTime * Speed;
+        transform.position += direction * Time.deltaTime * Speed * SpeedFactor;
+    }
+
+    public void ChangeSpeed(float factor)
+    {
+        SpeedFactor = factor;
     }
 }

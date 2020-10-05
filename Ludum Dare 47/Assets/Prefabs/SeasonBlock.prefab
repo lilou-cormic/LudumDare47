@@ -92,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3320639393805161842}
   - component: {fileID: 5575280409871531727}
+  - component: {fileID: 6613529420257796359}
   m_Layer: 0
   m_Name: SeasonBlock
   m_TagString: Untagged
@@ -128,6 +129,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   season: 0
+  Music: {fileID: 6613529420257796359}
+--- !u!114 &6613529420257796359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8694874521243301143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dab74043e07f484ca00a4cca649543a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _MusicName: 
+  _AudioSource: {fileID: 0}
+  VolumeMultiplier: 1
+  PlayOnStart: 0
 --- !u!1001 &2628427746261017450
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -44,6 +44,8 @@ public class Foliage : MonoBehaviour
                 SpriteRenderer.sprite = WinterSprite;
                 break;
         }
+
+        GetComponentInChildren<Obstacle>()?.gameObject.SetActive(SpriteRenderer.sprite != null);
     }
 
     private void GameManager_CurrentSeasonChanged()
